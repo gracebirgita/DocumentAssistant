@@ -7,7 +7,7 @@ import torch
 
 load_dotenv()
 
-
+# build RAG manually
 
 # 1. input file/text as basis info
 print("Input your information resource: ")
@@ -102,18 +102,3 @@ print(completion.choices[0].message.content)
 print('Source')
 for source, content in sources:
     print(f"- {content} [{source}]")
-
-# from langchain_community.document_loaders import WebBaseLoader
-
-# loader = WebBaseLoader(web_paths=["https://www.example.com"])
-# docs = loader.load()
-# print(docs[0].page_content)  # Menampilkan isi halaman
-
-# document_input = docs[0].page_content
-# documents = chunk_text(document_input, chunk_size=80)
-
-# from langchain_community.document_loaders import TextLoader
-# loader = TextLoader("namafile.txt")
-# docs = loader.load()
-# document_input = docs[0].page_content
-# documents = chunk_text(document_input, chunk_size=80)
