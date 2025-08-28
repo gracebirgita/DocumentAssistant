@@ -2,14 +2,14 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.chains import RetrievalQA
+# from langchain.chains import RetrievalQA
 from langchain_community.llms import OpenAI
 from langchain_community.document_loaders import TextLoader
 from langchain_core.documents import Document
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
-import getpass
+# import getpass
 
 load_dotenv()
 def main():
@@ -90,4 +90,5 @@ def main():
     # print("Jawaban:", result["result"])
 
 if __name__=="__main__":
+
     main()
