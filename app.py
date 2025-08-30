@@ -97,12 +97,39 @@ def extract_text_from_file(file_or_url, input_type=None):
 
 
 # summarizer = load_summarizer()
+# device = 0 if torch.cuda.is_available() else -1
+# summarizer = pipeline(
+#     "summarization",
+#     model="facebook/bart-large-cnn",
+#     device=device,                  # force CPU
+#     torch_dtype=torch.float32       # not half/quantized
+# )
 device = 0 if torch.cuda.is_available() else -1
+model_name = "facebook/bart-large-cnn"
+
+# Load tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# Load model langsung ke CPU/GPU, no meta device
+model = AutoModelForSeq2SeqLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.float32,       # full precision (no half/quantized)
+    low_cpu_mem_usage=False,         # disable meta init
+    device_map=None                  # force no accelerate/meta
+)
+
+# Kalau ada GPU → pindah manual
+if device >= 0:
+    model = model.to(f"cuda:{device}")
+else:
+    model = model.to("cpu")
+
+# Buat pipeline
 summarizer = pipeline(
     "summarization",
-    model="facebook/bart-large-cnn",
-    device=device,                  # force CPU
-    torch_dtype=torch.float32       # not half/quantized
+    model=model,
+    tokenizer=tokenizer,
+    device=device
 )
 def summarize(text):
     if not text or len(text.strip())==0:
@@ -325,6 +352,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
