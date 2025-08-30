@@ -98,14 +98,21 @@ def extract_text_from_file(file_or_url, input_type=None):
 
 # summarizer = load_summarizer()
 device = 0 if torch.cuda.is_available() else -1
-model_name = "sshleifer/distilbart-cnn-12-6"  # light ver
-summarizer = pipeline(
-    "summarization",
-    # model="facebook/bart-large-cnn",
-    model = model_name,
-    device=device,                  # force CPU
-    torch_dtype=torch.float32       # not half/quantized
-)
+# model_name = "sshleifer/distilbart-cnn-12-6"  # light ver
+# summarizer = pipeline(
+#     "summarization",
+#     # model="facebook/bart-large-cnn",
+#     model = model_name,
+#     device=device,                  # force CPU
+#     torch_dtype=torch.float32       # not half/quantized
+# )
+
+model_name = "sshleifer/distilbart-cnn-12-6"
+
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name, trust_remote_code=True, use_safetensors=True)
+
+summarizer = pipeline("summarization", model=model, tokenizer=tokenizer, device=device)
 
 
 def summarize(text):
@@ -329,6 +336,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
