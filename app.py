@@ -97,6 +97,11 @@ def extract_text_from_file(file_or_url, input_type=None):
 
 
 # summarizer = load_summarizer()
+model_name = "facebook/bart-large-cnn"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+print("✅ Model & tokenizer loaded.")
+
 device = 0 if torch.cuda.is_available() else -1
 summarizer = pipeline(
     "summarization",
@@ -326,6 +331,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
