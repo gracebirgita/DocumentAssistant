@@ -97,13 +97,13 @@ def load_summarizer():
 
 
 summarizer = load_summarizer()
-device = 0 if torch.cuda.is_available() else -1
-summarizer = pipeline(
-    "summarization",
-    model="facebook/bart-large-cnn",
-    device=device,                  # force CPU
-    torch_dtype=torch.float32       # not half/quantized
-)
+# device = 0 if torch.cuda.is_available() else -1
+# summarizer = pipeline(
+#     "summarization",
+#     model="facebook/bart-large-cnn",
+#     device=device,                  # force CPU
+#     torch_dtype=torch.float32       # not half/quantized
+# )
 def summarize(text):
     if not text or len(text.strip())==0:
         st.write("please insert your text...")
@@ -327,6 +327,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
