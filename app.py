@@ -6,6 +6,7 @@ from transformers import pipeline
 # load file reader
 import PyPDF2
 from langchain_community.document_loaders import WebBaseLoader
+from sentence_transformers import SentenceTransformer
 
 # RAG
 import os
@@ -284,5 +285,6 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
