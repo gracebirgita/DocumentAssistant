@@ -91,7 +91,10 @@ def setup_rag_from_text(text):
     splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=100)
     splitter_docs = splitter.split_documents(docs)
     # 3. embedding & vectorstore (langchain)
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": "cpu", "torch_dtype": "float32"})
+    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device="cpu")
+    model.to(dtype=torch.float32)
+    embeddings = HuggingFaceEmbeddings(model=model)
+    # embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": "cpu"})
     vectorstore = FAISS.from_documents(splitter_docs, embeddings)
     # 4. retriever & QA chain(langchain)
     retriever = vectorstore.as_retriever()
@@ -281,4 +284,5 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
