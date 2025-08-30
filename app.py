@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import numpy as np
 print(np.__version__)
-
+st.set_page_config(page_title="Document Assistant", layout="wide")
 # prompt = st.chat_input(
 #     "Say something and/or attach an image",
 #     accept_file=True,
@@ -188,8 +188,6 @@ def get_rag_response(retriever, question):
 
     return response, sources
 
-st.set_page_config(page_title="Document Assistant", layout="wide")
-
 
 st.sidebar.title("-- Menu --")
 app_mode = st.sidebar.selectbox(
@@ -327,6 +325,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
