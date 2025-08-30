@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 # load file reader
 import PyPDF2
 from langchain_community.document_loaders import WebBaseLoader
+from sentence_transformers import SentenceTransformer
 
 # RAG
 import os
@@ -54,48 +55,12 @@ def extract_text_from_file(file_or_url, input_type=None):
         
 
 # summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
-# summarizer = pipeline(
-#     "summarization",
-#     model="facebook/bart-large-cnn",
-#     device=-1,                  # force CPU
-#     torch_dtype="float32"       # not half/quantized
-# )
-@st.cache_resource
-def load_summarizer():
-    model_candidates = [
-        "facebook/bart-large-cnn",          # main
-        "sshleifer/distilbart-cnn-12-6",    # fallback 1 (smaller)
-        "t5-small"                          # fallback 2 (most light)
-    ]
-
-    for model_name in model_candidates:
-        try:
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-            model = AutoModelForSeq2SeqLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.float32,  
-                device_map=None        
-            )
-
-            summarizer = pipeline(
-                "summarization",
-                model=model,
-                tokenizer=tokenizer,
-                device=-1  # -1 = CPU only
-            )
-            st.success(f"Loaded summarizer: {model_name}")
-            return summarizer
-
-        except Exception as e:
-            st.warning(f"Failed to load {model_name}: {e}")
-            continue
-
-    st.error(" No summarization model could be loaded.")
-    return None
-
-
-summarizer = load_summarizer()
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    device=-1,                  # force CPU
+    torch_dtype="float32"       # not half/quantized
+)
 def summarize(text):
     if not text or len(text.strip())==0:
         st.write("please insert your text...")
@@ -126,6 +91,9 @@ def setup_rag_from_text(text):
     splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=100)
     splitter_docs = splitter.split_documents(docs)
     # 3. embedding & vectorstore (langchain)
+    # model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device="cpu")
+    # model.to(dtype=torch.float32)
+    # embeddings = HuggingFaceEmbeddings(model=model)
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": "cpu"})
     vectorstore = FAISS.from_documents(splitter_docs, embeddings)
     # 4. retriever & QA chain(langchain)
@@ -316,3 +284,8 @@ def main():
 if __name__=='__main__':
 
     main()
+
+
+
+
+
