@@ -154,7 +154,7 @@ app_mode = st.sidebar.selectbox(
 def main():
     if app_mode=="Summarizer":
         st.title("Document Summarizer")
-        st.markdown("Upload file or insert text to get the summarize.")
+        st.markdown("Upload file or insert text to get the summarize (in english).")
 
         input_method = st.radio(
             "Input format: ",
@@ -190,7 +190,7 @@ def main():
     # CHATBOT RAG
     elif app_mode =="RAG Chatbot":
         st.title("RAG Chatbot - ask from your document")
-        st.markdown("Upload your PDF or text and ask the question")
+        st.markdown("Upload your PDF or text and ask the question (in english)")
         rag_input = st.radio(
             "Document for analysis: ",
             ("Upload File", "Input Text", "Insert Link")
@@ -279,4 +279,5 @@ def main():
 
 
 if __name__=='__main__':
+
     main()
