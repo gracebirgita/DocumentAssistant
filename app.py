@@ -54,7 +54,13 @@ def extract_text_from_file(file_or_url, input_type=None):
     return ""
         
 
-summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
+# summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    device=-1,                  # force CPU
+    torch_dtype="float32"       # not half/quantized
+)
 def summarize(text):
     if not text or len(text.strip())==0:
         st.write("please insert your text...")
