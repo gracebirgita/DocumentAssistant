@@ -55,12 +55,12 @@ def extract_text_from_file(file_or_url, input_type=None):
         
 
 # summarizer = pipeline('summarization', model='facebook/bart-large-cnn')
-summarizer = pipeline(
-     "summarization",
-     model="facebook/bart-large-cnn",
-     device=-1,                  # force CPU
-     torch_dtype="float32"       # not half/quantized
-)
+# summarizer = pipeline(
+#      "summarization",
+#      model="facebook/bart-large-cnn",
+#      device=-1,                  # force CPU
+#      torch_dtype="float32"       # not half/quantized
+# )
 # @st.cache_resource
 # def load_summarizer():
 #     model_candidates = [
@@ -97,13 +97,13 @@ summarizer = pipeline(
 
 
 # summarizer = load_summarizer()
-# device = 0 if torch.cuda.is_available() else -1
-# summarizer = pipeline(
-#     "summarization",
-#     model="facebook/bart-large-cnn",
-#     device=device,                  # force CPU
-#     torch_dtype=torch.float32       # not half/quantized
-# )
+device = 0 if torch.cuda.is_available() else -1
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    device=device,                  # force CPU
+    torch_dtype=torch.float32       # not half/quantized
+)
 
 def summarize(text):
     if not text or len(text.strip())==0:
@@ -326,6 +326,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
