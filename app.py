@@ -85,11 +85,11 @@ def load_summarizer():
                 tokenizer=tokenizer,
                 device=-1  # -1 = CPU only
             )
-            st.success(f"Loaded summarizer: {model_name}")
+            print(f"Loaded summarizer: {model_name}")
             return summarizer
 
         except Exception as e:
-            st.warning(f"Failed to load {model_name}: {e}")
+            print(f"Failed to load {model_name}: {e}")
             continue
 
     st.error(" No summarization model could be loaded.")
@@ -325,6 +325,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
