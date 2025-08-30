@@ -61,49 +61,49 @@ def extract_text_from_file(file_or_url, input_type=None):
 #     device=-1,                  # force CPU
 #     torch_dtype="float32"       # not half/quantized
 # )
-@st.cache_resource
-def load_summarizer():
-    model_candidates = [
-        "facebook/bart-large-cnn",          # main
-        "sshleifer/distilbart-cnn-12-6",    # fallback 1 (smaller)
-        "t5-small"                          # fallback 2 (most light)
-    ]
+# @st.cache_resource
+# def load_summarizer():
+#     model_candidates = [
+#         "facebook/bart-large-cnn",          # main
+#         "sshleifer/distilbart-cnn-12-6",    # fallback 1 (smaller)
+#         "t5-small"                          # fallback 2 (most light)
+#     ]
 
-    for model_name in model_candidates:
-        try:
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
+#     for model_name in model_candidates:
+#         try:
+#             tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-            model = AutoModelForSeq2SeqLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.float32,  
-                device_map=None        
-            )
+#             model = AutoModelForSeq2SeqLM.from_pretrained(
+#                 model_name,
+#                 torch_dtype=torch.float32,  
+#                 device_map=None        
+#             )
 
-            summarizer = pipeline(
-                "summarization",
-                model=model,
-                tokenizer=tokenizer,
-                device=-1  # -1 = CPU only
-            )
-            print(f"Loaded summarizer: {model_name}")
-            return summarizer
+#             summarizer = pipeline(
+#                 "summarization",
+#                 model=model,
+#                 tokenizer=tokenizer,
+#                 device=-1  # -1 = CPU only
+#             )
+#             print(f"Loaded summarizer: {model_name}")
+#             return summarizer
 
-        except Exception as e:
-            print(f"Failed to load {model_name}: {e}")
-            continue
+#         except Exception as e:
+#             print(f"Failed to load {model_name}: {e}")
+#             continue
 
-    st.error(" No summarization model could be loaded.")
-    return None
+#     st.error(" No summarization model could be loaded.")
+#     return None
 
 
-summarizer = load_summarizer()
-# device = 0 if torch.cuda.is_available() else -1
-# summarizer = pipeline(
-#     "summarization",
-#     model="facebook/bart-large-cnn",
-#     device=device,                  # force CPU
-#     torch_dtype=torch.float32       # not half/quantized
-# )
+# summarizer = load_summarizer()
+device = 0 if torch.cuda.is_available() else -1
+summarizer = pipeline(
+    "summarization",
+    model="facebook/bart-large-cnn",
+    device=device,                  # force CPU
+    torch_dtype=torch.float32       # not half/quantized
+)
 def summarize(text):
     if not text or len(text.strip())==0:
         st.write("please insert your text...")
@@ -325,6 +325,7 @@ def main():
 if __name__=='__main__':
 
     main()
+
 
 
 
